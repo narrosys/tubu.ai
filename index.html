@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>">
+  <title>tubu.ai – By Minibot</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="app-container">
+    <!-- Header Bar -->
+    <div class="header">
+      <div class="header-left">
+        <div class="hamburger-menu" id="hamburgerMenu">☰</div>
+        <div class="logo">
+          <div class="brain-icon">🧠</div>
+          <span class="logo-text">TUBU - RAG AGENT BY Minibot</span>
+        </div>
+      </div>
+      
+      <!-- API Toggle Switch -->
+      <div class="api-toggle-container">
+        <label class="toggle-switch">
+          <input type="checkbox" id="apiToggle">
+          <span class="slider"></span>
+        </label>
+        <span class="toggle-label" id="toggleLabel">Primary Knowledge</span>
+      </div>
+      
+      <div class="header-right">
+        <button class="nav-button active" data-tab="chat">
+          <span class="nav-icon">💬</span>
+          Chat
+        </button>
+        <button class="theme-toggle">🌙</button>
+      </div>
+    </div>
+
+    <!-- Hamburger Menu Dropdown -->
+    <div class="menu-dropdown" id="menuDropdown">
+      <div class="menu-section">
+        <h3 class="menu-title">📊 Analysis Tools</h3>
+        <div class="menu-items">
+          <div class="menu-item" onclick="openQuickAnalysis()">
+            <span class="menu-icon">⚡</span>
+            <span class="menu-text">Quick Analysis</span>
+          </div>
+
+          <div class="menu-item" onclick="openCustomAnalysis()">
+            <span class="menu-icon">🎯</span>
+            <span class="menu-text">Custom Analysis</span>
+          </div>
+          <div class="menu-item" onclick="openAnalysisTemplates()">
+            <span class="menu-icon">📋</span>
+            <span class="menu-text">Analysis Templates</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="menu-section">
+        <h3 class="menu-title">❓ Help & Support</h3>
+        <div class="menu-items">
+
+          <div class="menu-item" onclick="openTutorials()">
+            <span class="menu-icon">🎥</span>
+            <span class="menu-text">Tutorials</span>
+          </div>
+          <div class="menu-item" onclick="openContactSupport()">
+            <span class="menu-icon">📞</span>
+            <span class="menu-text">Contact Support</span>
+          </div>
+          <div class="menu-item" onclick="openReportBug()">
+            <span class="menu-icon">🐛</span>
+            <span class="menu-text">Report Bug</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="main-content">
+      <!-- Knowledge Vault Sidebar -->
+      <div class="knowledge-vault">
+        <h2 class="vault-title">Knowledge Vault</h2>
+        <div class="upload-area">
+          <div class="upload-icon">📁</div>
+          <p class="upload-text">Drag & drop</p>
+          <p class="upload-formats">Supports PDF, DOCX, TXT</p>
+        </div>
+        <div class="documents-count">
+          <p>Documents (0)</p>
+        </div>
+      </div>
+
+      <!-- Chat Interface -->
+      <div class="chat-interface">
+        <div class="chat-window" id="chatWindow">
+          <!-- Initial greeting message -->
+          <div class="message bot">
+            <div class="message-avatar">🧠</div>
+            <div class="message-content">
+              <div class="message-text">
+Hello! I'm Tubu, your AI assistant. I can help you analyze documents, answer questions, and provide insights based on your knowledge vault. How can I assist you today?
+              </div>
+              <div class="message-meta">
+                <span class="timestamp">9:08:17 PM</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="input-section">
+          <!-- Document Action Buttons (hidden by default) -->
+          <div class="document-actions" id="documentActions" style="display: none;">
+            <button class="action-btn analyze-btn" onclick="analyzeDocument()">
+              <span class="btn-icon">📊</span>
+              Analyze Document
+            </button>
+            <button class="action-btn summary-btn" onclick="summaryDocument()">
+              <span class="btn-icon">📝</span>
+              Summary the Document
+            </button>
+            <button class="action-btn sentiment-btn" onclick="sentimentAnalysis()">
+              <span class="btn-icon">😊</span>
+              Sentiment Analysis
+            </button>
+          </div>
+          
+          <div class="input-container">
+            <input type="text" id="userInput" placeholder="Ask me anything about your documents..." />
+            <div class="input-actions">
+              <button class="pen-icon">✏️</button>
+              <button class="send-button" onclick="sendMessage()">Send</button>
+            </div>
+          </div>
+          <p class="input-hint">Press Enter to send</p>
+          <p class="documents-status">0 documents ready</p>
+        </div>
+      </div>
+
+      <!-- Chat History Sidebar -->
+      <div class="chat-history">
+        <h2 class="history-title">Chat History</h2>
+        <div class="history-list" id="chatHistory">
+          <!-- History items will be added here dynamically -->
+        </div>
+        <div class="history-actions">
+          <button class="clear-history-btn">Clear History</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Analysis Tools Modal -->
+  <div class="modal" id="analysisModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title" id="analysisModalTitle">Analysis Tools</h2>
+        <button class="modal-close" onclick="closeModal('analysisModal')">×</button>
+      </div>
+      <div class="modal-body" id="analysisModalBody">
+        <!-- Content will be dynamically loaded -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Help & Support Modal -->
+  <div class="modal" id="helpModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title" id="helpModalTitle">Help & Support</h2>
+        <button class="modal-close" onclick="closeModal('helpModal')">×</button>
+      </div>
+      <div class="modal-body" id="helpModalBody">
+        <!-- Content will be dynamically loaded -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Contact Support Modal -->
+  <div class="modal" id="contactModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">Contact Support</h2>
+        <button class="modal-close" onclick="closeModal('contactModal')">×</button>
+      </div>
+      <div class="modal-body">
+        <form class="contact-form" id="contactForm">
+          <div class="form-group">
+            <label for="contactName">Name</label>
+            <input type="text" id="contactName" required>
+          </div>
+          <div class="form-group">
+            <label for="contactEmail">Email</label>
+            <input type="email" id="contactEmail" required>
+          </div>
+          <div class="form-group">
+            <label for="contactSubject">Subject</label>
+            <select id="contactSubject" required>
+              <option value="">Select a subject</option>
+              <option value="technical">Technical Issue</option>
+              <option value="feature">Feature Request</option>
+              <option value="billing">Billing Question</option>
+              <option value="general">General Inquiry</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="contactMessage">Message</label>
+            <textarea id="contactMessage" rows="5" required placeholder="Describe your issue or question..."></textarea>
+          </div>
+          <button type="submit" class="submit-btn">Send Message</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bug Report Modal -->
+  <div class="modal" id="bugModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">Report Bug</h2>
+        <button class="modal-close" onclick="closeModal('bugModal')">×</button>
+      </div>
+      <div class="modal-body">
+        <form class="bug-form" id="bugForm">
+          <div class="form-group">
+            <label for="bugTitle">Bug Title</label>
+            <input type="text" id="bugTitle" required placeholder="Brief description of the bug">
+          </div>
+          <div class="form-group">
+            <label for="bugEmail">Email</label>
+            <input type="email" id="bugEmail" required>
+          </div>
+          <div class="form-group">
+            <label for="bugSeverity">Severity</label>
+            <select id="bugSeverity" required>
+              <option value="">Select severity</option>
+              <option value="low">Low - Minor issue</option>
+              <option value="medium">Medium - Some impact</option>
+              <option value="high">High - Significant impact</option>
+              <option value="critical">Critical - App unusable</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="bugSteps">Steps to Reproduce</label>
+            <textarea id="bugSteps" rows="4" required placeholder="1. Go to...&#10;2. Click on...&#10;3. Expected: ...&#10;4. Actual: ..."></textarea>
+          </div>
+          <div class="form-group">
+            <label for="bugDescription">Additional Details</label>
+            <textarea id="bugDescription" rows="3" placeholder="Any additional context, screenshots, or information..."></textarea>
+          </div>
+          <button type="submit" class="submit-btn">Submit Bug Report</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- PDF.js library for PDF text extraction -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
+
+
